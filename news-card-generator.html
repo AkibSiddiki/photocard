@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>News Photo Card Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface2: #222;
+  --border: #2e2e2e;
+  --text: #e8e8e8;
+  --text-muted: #888;
+  --text-dim: #555;
+  --accent: #f59e0b;
+  --accent-dim: #78350f;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  min-height: 100vh;
+}
+
+/* ─── Header ─── */
+.app-header {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.app-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Layout ─── */
+.app-body {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  height: calc(100vh - 53px);
+  overflow: hidden;
+}
+
+/* ─── Left Panel ─── */
+.left-panel {
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.url-section {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.url-row {
+  display: flex;
+  gap: 6px;
+}
+
+.url-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.url-input:focus { border-color: var(--accent); }
+.url-input::placeholder { color: var(--text-dim); }
+
+.btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { border-color: #555; background: #2a2a2a; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 600;
+}
+.btn-primary:hover { background: #fbbf24; border-color: #fbbf24; }
+
+.status-bar {
+  font-size: 11px;
+  color: var(--text-muted);
+  min-height: 16px;
+}
+.status-bar.loading { color: var(--info); }
+.status-bar.error   { color: var(--danger); }
+.status-bar.success { color: var(--success); }
+
+/* ─── Tabs ─── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ─── Scrollable fields ─── */
+.fields-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.fields-scroll::-webkit-scrollbar { width: 4px; }
+.fields-scroll::-webkit-scrollbar-track { background: transparent; }
+.fields-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.field-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.field input[type="text"],
+.field input[type="url"],
+.field textarea {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 7px 9px;
+  font-size: 12px;
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+.field input:focus, .field textarea:focus { border-color: var(--accent); }
+.field textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+
+.field input[type="file"] {
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+/* Color + slider fields */
+.color-field {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.color-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.color-item label { font-size: 10px; color: var(--text-muted); }
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+}
+.color-row input[type="color"] {
+  width: 22px; height: 22px;
+  border: none; background: none; cursor: pointer;
+  border-radius: 3px; padding: 0;
+}
+.color-hex {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: monospace;
+  letter-spacing: 0.03em;
+}
+
+.slider-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.slider-label span { color: var(--accent); font-weight: 600; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #000;
+}
+
+/* ─── Right Panel (Preview) ─── */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  padding: 32px 24px;
+  gap: 20px;
+  background: repeating-conic-gradient(#161616 0% 25%, #111 0% 50%) 0 0 / 20px 20px;
+}
+
+.preview-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.preview-shell {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6);
+  max-width: 100%;
+}
+
+/* ─── THE CARD ─── */
+#news-card {
+  width: 400px;
+  background: #111;
+  font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.card-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.card-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+}
+
+.card-favicon {
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.card-favicon.hidden { display: none; }
+
+.card-source {
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.card-verified {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.card-verified svg { width: 8px; height: 8px; }
+
+.card-sep {
+  width: 1px; height: 14px;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+.card-date {
+  font-size: 12px;
+  opacity: 0.75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.card-site-icon {
+  width: 22px; height: 22px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+
+.card-website {
+  font-size: 11px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.card-image-wrap {
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.card-image-wrap img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.card-img-placeholder {
+  background: #1e1e1e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+}
+
+.card-bottom {
+  padding: 22px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.card-headline {
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  word-break: break-word;
+}
+
+.card-subtext {
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.6;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.card-footer-arrow {
+  font-size: 13px;
+}
+
+.card-footer-text {
+  font-size: 12px;
+  opacity: 0.55;
+}
+
+/* ─── Download panel ─── */
+.download-panel {
+  display: flex;
+  gap: 8px;
+  align-self: stretch;
+  max-width: 400px;
+  width: 100%;
+}
+
+.download-panel .btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .app-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+  }
+  .left-panel { height: auto; max-height: 60vh; }
+  #news-card { width: 340px; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>📰 News Photo Card Generator</h1>
+  <span class="badge">BETA</span>
+</header>
+
+<div class="app-body">
+
+  <!-- ─── LEFT PANEL ─── -->
+  <div class="left-panel">
+
+    <div class="url-section">
+      <div class="url-row">
+        <input type="text" class="url-input" id="url-input" placeholder="Paste article URL and press Enter…" />
+        <button class="btn btn-primary" id="fetch-btn" onclick="fetchMeta()">Fetch</button>
+      </div>
+      <div class="status-bar" id="status">Paste a link or fill in the fields manually.</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('content', this)">Content</button>
+      <button class="tab-btn" onclick="switchTab('style', this)">Colors</button>
+      <button class="tab-btn" onclick="switchTab('typo', this)">Typography</button>
+    </div>
+
+    <div class="fields-scroll">
+
+      <!-- ── Content Tab ── -->
+      <div class="tab-pane active" id="tab-content">
+
+        <div class="field-section">
+          <div class="section-title">Top Bar</div>
+
+          <div class="field">
+            <label>Source / Publication name</label>
+            <input type="text" id="f-source" placeholder="e.g. সমকাল" oninput="updateCard()" />
+          </div>
+
+          <div class="field">
+            <label>Date</label>
+            <input type="text" id="f-date" placeholder="e.g. সোমবার, ২৫ মে ২০২৬" oninput="updateCard()" />
+          </div>
+
+          <div class="field">
+            <label>Website</label>
+            <input type="text" id="f-website" placeholder="e.g. samakal.com" oninput="updateCard()" />
+          </div>
+
+          <div class="field">
+            <label>Logo / Favicon URL</label>
+            <input type="url" id="f-logo" placeholder="https://…" oninput="updateCard()" />
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Card Content</div>
+
+          <div class="field">
+            <label>Headline (বাংলা বা English)</label>
+            <textarea id="f-headline" placeholder="Article headline…" oninput="updateCard()"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Sub / Footer text</label>
+            <input type="text" id="f-sub" placeholder="e.g. বিস্তারিত কমেন্টে" oninput="updateCard()" value="বিস্তারিত কমেন্টে" />
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Card Image</div>
+
+          <div class="field">
+            <label>Image URL (from fetched article)</label>
+            <input type="url" id="f-image" placeholder="https://…" oninput="updateCard()" />
+          </div>
+
+          <div class="field">
+            <label>Or upload a local image</label>
+            <input type="file" id="f-image-file" accept="image/*" onchange="handleImageUpload(this)" />
+          </div>
+        </div>
+
+      </div><!-- /tab-content -->
+
+      <!-- ── Style Tab ── -->
+      <div class="tab-pane" id="tab-style">
+
+        <div class="field-section">
+          <div class="section-title">Top Bar Colors</div>
+          <div class="color-field">
+            <div class="color-item">
+              <label>Background</label>
+              <div class="color-row">
+                <input type="color" id="c-topbar-bg" value="#0d0d0d" oninput="syncColor(this); updateCard()" />
+                <span class="color-hex" id="c-topbar-bg-hex">#0d0d0d</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label>Source name</label>
+              <div class="color-row">
+                <input type="color" id="c-source" value="#ff6a00" oninput="syncColor(this); updateCard()" />
+                <span class="color-hex" id="c-source-hex">#ff6a00</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label>Date / text</label>
+              <div class="color-row">
+                <input type="color" id="c-topbar-text" value="#ffffff" oninput="syncColor(this); updateCard()" />
+                <span class="color-hex" id="c-topbar-text-hex">#ffffff</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label>Verified dot</label>
+              <div class="color-row">
+                <input type="color" id="c-verified" value="#22c55e" oninput="syncColor(this); updateCard()" />
+                <span class="color-hex" id="c-verified-hex">#22c55e</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Bottom Section Colors</div>
+          <div class="color-field">
+            <div class="color-item">
+              <label>Background</label>
+              <div class="color-row">
+                <input type="color" id="c-bottom-bg" value="#080808" oninput="syncColor(this); updateCard()" />
+                <span class="color-hex" id="c-bottom-bg-hex">#080808</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label>Headline text</label>
+              <div class="color-row">
+                <input type="color" id="c-headline" value="#ffffff" oninput="syncColor(this); updateCard()" />
+                <span class="color-hex" id="c-headline-hex">#ffffff</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label>Footer arrow</label>
+              <div class="color-row">
+                <input type="color" id="c-arrow" value="#22c55e" oninput="syncColor(this); updateCard()" />
+                <span class="color-hex" id="c-arrow-hex">#22c55e</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label>Footer text</label>
+              <div class="color-row">
+                <input type="color" id="c-footer-text" value="#aaaaaa" oninput="syncColor(this); updateCard()" />
+                <span class="color-hex" id="c-footer-text-hex">#aaaaaa</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-style -->
+
+      <!-- ── Typography Tab ── -->
+      <div class="tab-pane" id="tab-typo">
+
+        <div class="field-section">
+          <div class="section-title">Font Sizes</div>
+
+          <div class="slider-field">
+            <div class="slider-label">Source name <span id="fs-source-val">20px</span></div>
+            <input type="range" id="fs-source" min="12" max="36" value="20" step="1" oninput="updateCard()" />
+          </div>
+
+          <div class="slider-field">
+            <div class="slider-label">Date / website <span id="fs-date-val">12px</span></div>
+            <input type="range" id="fs-date" min="9" max="18" value="12" step="1" oninput="updateCard()" />
+          </div>
+
+          <div class="slider-field">
+            <div class="slider-label">Headline <span id="fs-headline-val">26px</span></div>
+            <input type="range" id="fs-headline" min="14" max="52" value="26" step="1" oninput="updateCard()" />
+          </div>
+
+          <div class="slider-field">
+            <div class="slider-label">Footer text <span id="fs-footer-val">12px</span></div>
+            <input type="range" id="fs-footer" min="9" max="18" value="12" step="1" oninput="updateCard()" />
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Layout</div>
+
+          <div class="slider-field">
+            <div class="slider-label">Card width <span id="card-width-val">400px</span></div>
+            <input type="range" id="card-width" min="260" max="560" value="400" step="10" oninput="updateCard()" />
+          </div>
+
+          <div class="slider-field">
+            <div class="slider-label">Image height <span id="img-height-val">240px</span></div>
+            <input type="range" id="img-height" min="80" max="500" value="240" step="10" oninput="updateCard()" />
+          </div>
+
+          <div class="slider-field">
+            <div class="slider-label">Bottom padding <span id="pad-val">22px</span></div>
+            <input type="range" id="pad-bottom" min="8" max="60" value="22" step="2" oninput="updateCard()" />
+          </div>
+        </div>
+
+      </div><!-- /tab-typo -->
+
+    </div><!-- /fields-scroll -->
+  </div><!-- /left-panel -->
+
+  <!-- ─── RIGHT PANEL ─── -->
+  <div class="right-panel">
+
+    <div class="preview-label">Live Preview</div>
+
+    <div class="preview-shell" id="preview-shell">
+      <!-- THE CARD TO CAPTURE -->
+      <div id="news-card">
+
+        <!-- Top bar -->
+        <div class="card-topbar" id="card-topbar">
+          <div class="card-topbar-left">
+            <img class="card-favicon hidden" id="card-favicon" alt="" crossorigin="anonymous" />
+            <span class="card-source" id="card-source">সমকাল</span>
+            <div class="card-verified" id="card-verified">
+              <svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="card-sep"></div>
+            <span class="card-date" id="card-date">সোমবার, ২৫ মে ২০২৬</span>
+          </div>
+          <div class="card-topbar-right">
+            <div class="card-site-icon" id="card-site-icon">🌐</div>
+            <span class="card-website" id="card-website">samakal.com</span>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="card-image-wrap" id="card-image-wrap">
+          <div class="card-img-placeholder" id="card-placeholder" style="height: 240px;">
+            Image preview
+          </div>
+          <img id="card-img" src="" alt="" crossorigin="anonymous" style="display:none; height:240px; width:100%; object-fit:cover;" />
+        </div>
+
+        <!-- Bottom -->
+        <div class="card-bottom" id="card-bottom">
+          <div class="card-headline" id="card-headline">জঙ্গল সলিমপুরে র‍্যাব ক্যাম্পে হামলা, চলছে যৌথবাহিনীর অভিযান</div>
+          <div class="card-footer">
+            <span class="card-footer-arrow" id="card-footer-arrow" style="color:#22c55e">▼</span>
+            <span class="card-footer-text" id="card-footer-text">বিস্তারিত কমেন্টে</span>
+          </div>
+        </div>
+
+      </div><!-- /news-card -->
+    </div><!-- /preview-shell -->
+
+    <div class="download-panel">
+      <button class="btn" onclick="downloadCard('png')">⬇ Download PNG</button>
+      <button class="btn btn-primary" onclick="downloadCard('png', 3)">⬇ Download 3× (HD)</button>
+    </div>
+
+  </div><!-- /right-panel -->
+
+</div><!-- /app-body -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+// ─── Helpers ───────────────────────────────────────────────
+function $(id) { return document.getElementById(id); }
+function val(id) { return ($(id) && $(id).value) || ''; }
+function int(id, fallback) { return parseInt($(id)?.value) || fallback; }
+function hex(id) { return $(id)?.value || '#000000'; }
+
+function setStatus(msg, type = '') {
+  const el = $('status');
+  el.textContent = msg;
+  el.className = 'status-bar ' + type;
+}
+
+function syncColor(input) {
+  const hexEl = $(input.id + '-hex');
+  if (hexEl) hexEl.textContent = input.value;
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  $('tab-' + name).classList.add('active');
+}
+
+// ─── Update card live ───────────────────────────────────────
+function updateCard() {
+  // Sizes
+  const fsSource   = int('fs-source', 20);
+  const fsDate     = int('fs-date', 12);
+  const fsHeadline = int('fs-headline', 26);
+  const fsFooter   = int('fs-footer', 12);
+  const cardWidth  = int('card-width', 400);
+  const imgHeight  = int('img-height', 240);
+  const pad        = int('pad-bottom', 22);
+
+  // Update labels
+  $('fs-source-val').textContent   = fsSource + 'px';
+  $('fs-date-val').textContent     = fsDate + 'px';
+  $('fs-headline-val').textContent = fsHeadline + 'px';
+  $('fs-footer-val').textContent   = fsFooter + 'px';
+  $('card-width-val').textContent  = cardWidth + 'px';
+  $('img-height-val').textContent  = imgHeight + 'px';
+  $('pad-val').textContent         = pad + 'px';
+
+  // Card width
+  const card = $('news-card');
+  card.style.width = cardWidth + 'px';
+  $('preview-shell').style.width = cardWidth + 'px';
+
+  // ── Top bar ──
+  const topbar = $('card-topbar');
+  topbar.style.background = hex('c-topbar-bg');
+  topbar.style.color = hex('c-topbar-text');
+
+  const src = $('card-source');
+  src.textContent = val('f-source') || 'Source';
+  src.style.color = hex('c-source');
+  src.style.fontSize = fsSource + 'px';
+
+  const dateEl = $('card-date');
+  dateEl.textContent = val('f-date') || '';
+  dateEl.style.fontSize = fsDate + 'px';
+
+  const websiteEl = $('card-website');
+  websiteEl.textContent = val('f-website') || '';
+  websiteEl.style.fontSize = fsDate + 'px';
+  websiteEl.style.color = hex('c-topbar-text');
+
+  $('card-verified').style.background = hex('c-verified');
+
+  // favicon
+  const logoUrl = val('f-logo');
+  const favicon = $('card-favicon');
+  if (logoUrl) {
+    favicon.src = logoUrl;
+    favicon.classList.remove('hidden');
+  } else {
+    favicon.classList.add('hidden');
+  }
+
+  // ── Image ──
+  const imgUrl = val('f-image');
+  const cardImg = $('card-img');
+  const placeholder = $('card-placeholder');
+
+  if (imgUrl) {
+    cardImg.style.height = imgHeight + 'px';
+    if (cardImg.src !== imgUrl) cardImg.src = imgUrl;
+    cardImg.style.display = 'block';
+    placeholder.style.display = 'none';
+  } else {
+    cardImg.style.display = 'none';
+    placeholder.style.display = 'flex';
+    placeholder.style.height = imgHeight + 'px';
+  }
+
+  // ── Bottom ──
+  const bottom = $('card-bottom');
+  bottom.style.background = hex('c-bottom-bg');
+  bottom.style.padding = `${pad}px ${pad}px ${Math.round(pad * 0.8)}px`;
+
+  const hl = $('card-headline');
+  hl.textContent = val('f-headline') || 'Headline will appear here…';
+  hl.style.color = hex('c-headline');
+  hl.style.fontSize = fsHeadline + 'px';
+
+  const arrowEl = $('card-footer-arrow');
+  const footerText = $('card-footer-text');
+  const subVal = val('f-sub');
+
+  arrowEl.style.color = hex('c-arrow');
+  footerText.textContent = subVal || 'বিস্তারিত কমেন্টে';
+  footerText.style.color = hex('c-footer-text');
+  footerText.style.fontSize = fsFooter + 'px';
+}
+
+// ─── Handle file upload ──────────────────────────────────────
+function handleImageUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    $('f-image').value = e.target.result;
+    updateCard();
+  };
+  reader.readAsDataURL(file);
+}
+
+// ─── Fetch metadata via CORS proxy ──────────────────────────
+const PROXY = 'https://api.allorigins.win/get?url=';
+
+async function fetchMeta() {
+  const url = $('url-input').value.trim();
+  if (!url) { setStatus('Please enter a URL first.', 'error'); return; }
+
+  setStatus('Fetching article metadata…', 'loading');
+  $('fetch-btn').disabled = true;
+
+  try {
+    const res = await fetch(PROXY + encodeURIComponent(url), { signal: AbortSignal.timeout(12000) });
+    if (!res.ok) throw new Error('Proxy error: ' + res.status);
+    const data = await res.json();
+    if (!data.contents) throw new Error('Empty response from proxy');
+
+    const doc = new DOMParser().parseFromString(data.contents, 'text/html');
+
+    function getMeta(...props) {
+      for (const prop of props) {
+        const el = doc.querySelector(`meta[property="${prop}"], meta[name="${prop}"]`);
+        if (el) {
+          const v = el.getAttribute('content') || el.getAttribute('value');
+          if (v && v.trim()) return v.trim();
+        }
+      }
+      return '';
+    }
+
+    const title    = getMeta('og:title', 'twitter:title') || doc.title || '';
+    const image    = getMeta('og:image', 'twitter:image:src', 'twitter:image') || '';
+    const siteName = getMeta('og:site_name') || '';
+    const pubDate  = getMeta('article:published_time', 'og:updated_time', 'datePublished') || '';
+
+    let dateStr = '';
+    if (pubDate) {
+      try {
+        const d = new Date(pubDate);
+        if (!isNaN(d)) {
+          dateStr = d.toLocaleDateString('bn-BD', {
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+          });
+        }
+      } catch(e) { dateStr = pubDate.substring(0, 10); }
+    }
+
+    // favicon
+    let faviconUrl = '';
+    const favEl = doc.querySelector(
+      'link[rel="apple-touch-icon"], link[rel="icon"][type="image/png"], link[rel="shortcut icon"], link[rel="icon"]'
+    );
+    if (favEl?.getAttribute('href')) {
+      try { faviconUrl = new URL(favEl.getAttribute('href'), url).href; } catch(e) {}
+    }
+    if (!faviconUrl) {
+      try { faviconUrl = new URL('/favicon.ico', url).href; } catch(e) {}
+    }
+
+    let domain = '';
+    try { domain = new URL(url).hostname.replace(/^www\./, ''); } catch(e) {}
+
+    // populate fields
+    if (title)    $('f-headline').value = title;
+    if (image)    $('f-image').value    = image;
+    if (siteName) $('f-source').value   = siteName;
+    if (domain)   $('f-website').value  = domain;
+    if (dateStr)  $('f-date').value     = dateStr;
+    if (faviconUrl) $('f-logo').value   = faviconUrl;
+
+    updateCard();
+    setStatus('Metadata fetched! Edit any field freely.', 'success');
+
+  } catch(err) {
+    setStatus('Could not fetch metadata — fill in the fields manually.', 'error');
+    console.warn(err);
+  } finally {
+    $('fetch-btn').disabled = false;
+  }
+}
+
+// ─── Download card ───────────────────────────────────────────
+async function downloadCard(format = 'png', scale = 2) {
+  const card = $('news-card');
+  setStatus('Generating image…', 'loading');
+  try {
+    const canvas = await html2canvas(card, {
+      scale,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      logging: false,
+      imageTimeout: 10000,
+    });
+    const source = val('f-source') || 'card';
+    const ts = new Date().toISOString().slice(0,10);
+    const name = `${source.replace(/\s+/g,'-')}-${ts}.${format}`;
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/' + (format === 'jpg' ? 'jpeg' : 'png'));
+    link.download = name;
+    link.click();
+    setStatus('Downloaded: ' + name, 'success');
+  } catch(err) {
+    setStatus('Download failed — try right-clicking the card preview to save it.', 'error');
+    console.error(err);
+  }
+}
+
+// ─── Init ────────────────────────────────────────────────────
+$('url-input').addEventListener('keydown', e => { if (e.key === 'Enter') fetchMeta(); });
+
+// seed default values from existing card
+$('f-source').value  = 'সমকাল';
+$('f-date').value    = 'সোমবার, ২৫ মে ২০২৬';
+$('f-website').value = 'samakal.com';
+$('f-headline').value = 'জঙ্গল সলিমপুরে র‍্যাব ক্যাম্পে হামলা, চলছে যৌথবাহিনীর অভিযান';
+$('f-sub').value = 'বিস্তারিত কমেন্টে';
+
+updateCard();
+</script>
+</body>
+</html>
