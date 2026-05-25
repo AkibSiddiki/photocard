@@ -422,14 +422,15 @@
     /* ─── THE CARD ─── */
     #news-card {
       width: 440px;
-      background: #000;
+      background: #ffffff;
+      color: #111111;
       font-family: 'Noto Serif Bengali', serif;
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
       flex-shrink: 0;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
     }
 
     .card-topbar {
@@ -467,14 +468,7 @@
     }
 
     .card-verified {
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      background: #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      display: none;
     }
 
     .card-verified svg {
@@ -485,7 +479,7 @@
     .card-sep {
       width: 1px;
       height: 18px;
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(0, 0, 0, 0.15);
       flex-shrink: 0;
       margin: 0 2px;
     }
@@ -508,7 +502,7 @@
     .card-site-icon {
       width: 22px;
       height: 22px;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.05);
       border-radius: 4px;
       display: flex;
       align-items: center;
@@ -712,8 +706,8 @@
               <div class="color-item">
                 <label>Background</label>
                 <div class="color-row">
-                  <input type="color" id="c-topbar-bg" value="#0d0d0d" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-topbar-bg-hex">#0d0d0d</span>
+                  <input type="color" id="c-topbar-bg" value="#fff" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-topbar-bg-hex">#fff</span>
                 </div>
               </div>
               <div class="color-item">
@@ -726,17 +720,11 @@
               <div class="color-item">
                 <label>Date / text</label>
                 <div class="color-row">
-                  <input type="color" id="c-topbar-text" value="#ffffff" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-topbar-text-hex">#ffffff</span>
+                  <input type="color" id="c-topbar-text" value="#212121" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-topbar-text-hex">#212121</span>
                 </div>
               </div>
-              <div class="color-item">
-                <label>Verified dot</label>
-                <div class="color-row">
-                  <input type="color" id="c-verified" value="#22c55e" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-verified-hex">#22c55e</span>
-                </div>
-              </div>
+
             </div>
           </div>
 
@@ -746,15 +734,15 @@
               <div class="color-item">
                 <label>Background</label>
                 <div class="color-row">
-                  <input type="color" id="c-bottom-bg" value="#080808" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-bottom-bg-hex">#080808</span>
+                  <input type="color" id="c-bottom-bg" value="#fff" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-bottom-bg-hex">#fff</span>
                 </div>
               </div>
               <div class="color-item">
                 <label>Headline text</label>
                 <div class="color-row">
-                  <input type="color" id="c-headline" value="#ffffff" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-headline-hex">#ffffff</span>
+                  <input type="color" id="c-headline" value="#212121" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-headline-hex">#212121</span>
                 </div>
               </div>
               <div class="color-item">
@@ -767,8 +755,8 @@
               <div class="color-item">
                 <label>Footer text</label>
                 <div class="color-row">
-                  <input type="color" id="c-footer-text" value="#aaaaaa" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-footer-text-hex">#aaaaaa</span>
+                  <input type="color" id="c-footer-text" value="#383838" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-footer-text-hex">#383838</span>
                 </div>
               </div>
             </div>
@@ -948,7 +936,7 @@
       dateEl.style.fontSize = fsDate + 'px';
 
 
-      $('card-verified').style.background = hex('c-verified');
+
 
       // logo / favicon — shown as brand image, text source hidden
       const logoUrl = val('f-logo');
