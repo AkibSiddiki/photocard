@@ -260,9 +260,21 @@
     }
 
     @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-6px); }
-      40%, 80% { transform: translateX(6px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-6px);
+      }
+
+      40%,
+      80% {
+        transform: translateX(6px);
+      }
     }
 
     /* ─── Toast Notification ─── */
@@ -312,6 +324,7 @@
         transform: translateY(-20px);
         opacity: 0;
       }
+
       to {
         transform: translateY(0);
         opacity: 1;
@@ -323,6 +336,7 @@
         transform: translateY(0);
         opacity: 1;
       }
+
       to {
         transform: translateY(-20px);
         opacity: 0;
@@ -410,9 +424,10 @@
     /* ─── Download panel ─── */
     .download-panel {
       display: flex;
+      flex-direction: column;
       gap: 12px;
       justify-content: center;
-      width: 100%;
+      width: 50%;
       margin-top: auto;
     }
 
@@ -420,6 +435,194 @@
       padding: 12px 24px;
       font-size: 14px;
       text-align: center;
+    }
+
+    /* ─── Crop Modal ─── */
+    .crop-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      padding: 24px;
+    }
+
+    .crop-overlay.active {
+      display: flex;
+    }
+
+    .crop-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 600px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
+    }
+
+    .crop-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .crop-modal-header h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .crop-modal-header p {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .crop-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+
+    .crop-close-btn:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .crop-canvas-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+      user-select: none;
+    }
+
+    #crop-canvas {
+      display: block;
+      max-width: 100%;
+      max-height: 55vh;
+    }
+
+    .crop-selection {
+      position: absolute;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+      cursor: move;
+      box-sizing: border-box;
+    }
+
+    .crop-selection::before,
+    .crop-selection::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .crop-selection::before {
+      left: 33.33%;
+      top: 0;
+      width: 1px;
+      height: 100%;
+      border-left: 1px dashed rgba(255, 255, 255, 0.4);
+    }
+
+    .crop-selection::after {
+      top: 33.33%;
+      left: 0;
+      height: 1px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.4);
+    }
+
+    /* second rule of thirds line (via corner handles) */
+    .crop-handle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      background: var(--info);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .crop-handle.tl {
+      top: -5px;
+      left: -5px;
+      cursor: nw-resize;
+    }
+
+    .crop-handle.tr {
+      top: -5px;
+      right: -5px;
+      cursor: ne-resize;
+    }
+
+    .crop-handle.bl {
+      bottom: -5px;
+      left: -5px;
+      cursor: sw-resize;
+    }
+
+    .crop-handle.br {
+      bottom: -5px;
+      right: -5px;
+      cursor: se-resize;
+    }
+
+    .crop-zoom-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .crop-zoom-row label {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .crop-zoom-row span {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      width: 36px;
+      text-align: right;
+    }
+
+    .crop-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .crop-info-pill {
+      font-size: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 3px 10px;
+      border-radius: 20px;
+      align-self: center;
     }
 
     /* ─── Responsive ─── */
@@ -439,6 +642,42 @@
 </head>
 
 <body>
+
+  <!-- ─── CROP MODAL ─── -->
+  <div class="crop-overlay" id="crop-overlay">
+    <div class="crop-modal">
+      <div class="crop-modal-header">
+        <div>
+          <h2>✂️ Crop Image to 1:1</h2>
+          <p>Drag the selection or use handles to position your crop area.</p>
+        </div>
+        <button class="crop-close-btn" onclick="closeCropModal()" title="Cancel">✕</button>
+      </div>
+
+      <div class="crop-canvas-wrapper" id="crop-canvas-wrapper">
+        <canvas id="crop-canvas"></canvas>
+        <div class="crop-selection" id="crop-selection">
+          <div class="crop-handle tl" data-handle="tl"></div>
+          <div class="crop-handle tr" data-handle="tr"></div>
+          <div class="crop-handle bl" data-handle="bl"></div>
+          <div class="crop-handle br" data-handle="br"></div>
+        </div>
+      </div>
+
+      <div class="crop-zoom-row">
+        <label for="crop-zoom-slider">🔍 Zoom</label>
+        <input type="range" id="crop-zoom-slider" min="10" max="300" value="100" step="1" oninput="onCropZoom()"
+          style="flex:1;" />
+        <span id="crop-zoom-val">100%</span>
+        <span class="crop-info-pill" id="crop-size-pill">— × —</span>
+      </div>
+
+      <div class="crop-actions">
+        <button class="btn" onclick="closeCropModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="applyCrop()">✔ Apply Crop</button>
+      </div>
+    </div>
+  </div>
 
   <header class="app-header">
     <h1>🖼️ Photo Frame Generator</h1>
@@ -512,12 +751,15 @@
       </div>
 
       <div class="download-panel">
-        <button class="btn btn-primary" onclick="downloadCard('png', 2)">⬇ Download HD (2K)</button>
-        <button class="btn" onclick="downloadCard('png', 1)">⬇ Download Standard (1080p)</button>
+        <button class="btn btn-primary" onclick="downloadCard('png', 2)">⬇ Download (2K)</button>
+        <button class="btn" onclick="downloadCard('png', 1)">⬇ Download (1080p)</button>
       </div>
 
       <footer style="margin-top: 10px; color: var(--text-dim); font-size: 11px; text-align: center;">
-        Developed by <a href="https://emythmakers.com" target="_blank" style="color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">eMythMakers.com</a>
+        Developed by <a href="https://emythmakers.com" target="_blank"
+          style="color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;"
+          onmouseover="this.style.color='var(--accent)'"
+          onmouseout="this.style.color='var(--text-muted)'">eMythMakers.com</a>
       </footer>
     </div><!-- /right-panel -->
 
@@ -534,15 +776,15 @@
         container.className = 'toast-container';
         document.body.appendChild(container);
       }
-      
+
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
-      
+
       const icon = type === 'error' ? '❌' : (type === 'success' ? '✅' : 'ℹ️');
       toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-      
+
       container.appendChild(toast);
-      
+
       setTimeout(() => {
         toast.style.animation = 'toast-out 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
         toast.addEventListener('animationend', () => {
@@ -558,20 +800,230 @@
       const el = $('status');
       el.textContent = msg;
       el.className = 'status-bar ' + type;
-      
+
       // Trigger animation reset for shake effect
       if (type === 'error') {
         el.style.animation = 'none';
         el.offsetHeight; /* trigger reflow */
         el.style.animation = null;
       }
-      
+
       if (type === 'error' || type === 'success') {
         showToast(msg, type);
       }
     }
 
-    // Handle file uploads and set base64 source with 1:1 ratio validation
+    // ─── Crop Engine ───
+    let cropCtx = null;
+    let cropImg = null;       // original Image object
+    let cropScale = 1;        // canvas display scale (canvas px per source px)
+    let cropTarget = null;    // which input triggered the crop
+    let cropTargetType = '';  // 'profile' | 'frame'
+    let selX = 0, selY = 0, selSize = 0;  // selection in canvas coords
+
+    // drag state
+    let drag = null; // { type:'move'|handle, startX, startY, origSelX, origSelY, origSize }
+
+    function openCropModal(dataUrl, inputEl, type) {
+      cropTarget = inputEl;
+      cropTargetType = type;
+
+      cropImg = new Image();
+      cropImg.onload = () => {
+        const canvas = $('crop-canvas');
+        const wrapper = $('crop-canvas-wrapper');
+
+        // Fit image into wrapper (max ~520 wide, 55vh tall)
+        const maxW = wrapper.offsetWidth || 520;
+        const maxH = Math.round(window.innerHeight * 0.55);
+        const ratio = Math.min(maxW / cropImg.width, maxH / cropImg.height, 1);
+
+        // Reset zoom slider to 100
+        $('crop-zoom-slider').value = 100;
+        $('crop-zoom-val').textContent = '100%';
+
+        cropScale = ratio;
+        renderCropCanvas();
+
+        $('crop-overlay').classList.add('active');
+      };
+      cropImg.src = dataUrl;
+    }
+
+    function renderCropCanvas() {
+      const canvas = $('crop-canvas');
+      const zoom = parseInt($('crop-zoom-slider').value) / 100;
+      const dw = Math.round(cropImg.width * cropScale * zoom);
+      const dh = Math.round(cropImg.height * cropScale * zoom);
+
+      canvas.width = dw;
+      canvas.height = dh;
+      canvas.style.width = dw + 'px';
+      canvas.style.height = dh + 'px';
+
+      cropCtx = canvas.getContext('2d');
+      cropCtx.clearRect(0, 0, dw, dh);
+      cropCtx.drawImage(cropImg, 0, 0, dw, dh);
+
+      // initialise selection box as the largest square centred on the canvas
+      const minDim = Math.min(dw, dh);
+      selSize = minDim;
+      selX = Math.round((dw - minDim) / 2);
+      selY = Math.round((dh - minDim) / 2);
+
+      positionSelection();
+      updateSizePill();
+    }
+
+    function positionSelection() {
+      const canvas = $('crop-canvas');
+      const wrapper = $('crop-canvas-wrapper');
+      const wRect = wrapper.getBoundingClientRect();
+      const cRect = canvas.getBoundingClientRect();
+
+      // offset of canvas inside wrapper
+      const offX = cRect.left - wRect.left;
+      const offY = cRect.top - wRect.top;
+
+      const sel = $('crop-selection');
+      sel.style.left = (offX + selX) + 'px';
+      sel.style.top = (offY + selY) + 'px';
+      sel.style.width = selSize + 'px';
+      sel.style.height = selSize + 'px';
+
+      updateSizePill();
+    }
+
+    function updateSizePill() {
+      const zoom = parseInt($('crop-zoom-slider').value) / 100;
+      const effectiveScale = cropScale * zoom;
+      const srcPx = Math.round(selSize / effectiveScale);
+      $('crop-size-pill').textContent = `${srcPx} × ${srcPx} px`;
+    }
+
+    function onCropZoom() {
+      const zoom = parseInt($('crop-zoom-slider').value);
+      $('crop-zoom-val').textContent = zoom + '%';
+      renderCropCanvas();
+    }
+
+    // ─── Drag / handle logic ───
+    function setupCropDrag() {
+      const wrapper = $('crop-canvas-wrapper');
+      const sel = $('crop-selection');
+
+      function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+      function getCanvasOffset() {
+        const cRect = $('crop-canvas').getBoundingClientRect();
+        const wRect = wrapper.getBoundingClientRect();
+        return { x: cRect.left - wRect.left, y: cRect.top - wRect.top };
+      }
+
+      function startDrag(e, type) {
+        e.preventDefault();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        drag = { type, startX: clientX, startY: clientY, origSelX: selX, origSelY: selY, origSize: selSize };
+      }
+
+      sel.addEventListener('mousedown', e => startDrag(e, 'move'));
+      sel.addEventListener('touchstart', e => startDrag(e, 'move'), { passive: false });
+
+      sel.querySelectorAll('.crop-handle').forEach(h => {
+        h.addEventListener('mousedown', e => { e.stopPropagation(); startDrag(e, 'resize-' + h.dataset.handle); });
+        h.addEventListener('touchstart', e => { e.stopPropagation(); startDrag(e, 'resize-' + h.dataset.handle); }, { passive: false });
+      });
+
+      function onMove(e) {
+        if (!drag) return;
+        e.preventDefault();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const dx = clientX - drag.startX;
+        const dy = clientY - drag.startY;
+        const cw = $('crop-canvas').width;
+        const ch = $('crop-canvas').height;
+
+        if (drag.type === 'move') {
+          selX = clamp(drag.origSelX + dx, 0, cw - selSize);
+          selY = clamp(drag.origSelY + dy, 0, ch - selSize);
+        } else {
+          // resize handles – maintain square by using max(|dx|,|dy|)
+          const delta = drag.type.includes('r') ? (dx > dy ? dx : dy) : (dx > dy ? -dx : -dy);
+          let newSize = clamp(drag.origSize + delta, 40, Math.min(cw, ch));
+
+          if (drag.type === 'resize-br') {
+            newSize = clamp(drag.origSize + Math.max(dx, dy), 40, Math.min(cw - drag.origSelX, ch - drag.origSelY));
+            selSize = newSize;
+          } else if (drag.type === 'resize-tl') {
+            newSize = clamp(drag.origSize - Math.min(dx, dy), 40, Math.min(cw, ch));
+            const growth = newSize - drag.origSize;
+            selX = clamp(drag.origSelX - growth, 0, drag.origSelX + drag.origSize - 40);
+            selY = clamp(drag.origSelY - growth, 0, drag.origSelY + drag.origSize - 40);
+            selSize = newSize;
+          } else if (drag.type === 'resize-tr') {
+            newSize = clamp(drag.origSize + dx - dy < 0 ? drag.origSize - dy : drag.origSize + dx, 40, Math.min(cw - drag.origSelX, ch));
+            const growth = newSize - drag.origSize;
+            selY = clamp(drag.origSelY - growth, 0, drag.origSelY + drag.origSize - 40);
+            selSize = newSize;
+          } else if (drag.type === 'resize-bl') {
+            newSize = clamp(drag.origSize - dx + dy < 0 ? drag.origSize + dy : drag.origSize - dx, 40, Math.min(cw, ch - drag.origSelY));
+            const growth = newSize - drag.origSize;
+            selX = clamp(drag.origSelX - growth, 0, drag.origSelX + drag.origSize - 40);
+            selSize = newSize;
+          }
+        }
+
+        positionSelection();
+      }
+
+      function endDrag() { drag = null; }
+
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('touchmove', onMove, { passive: false });
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchend', endDrag);
+    }
+
+    function closeCropModal() {
+      $('crop-overlay').classList.remove('active');
+      if (cropTarget) cropTarget.value = '';
+      cropTarget = null;
+      cropImg = null;
+    }
+
+    function applyCrop() {
+      // Read selection back in *source image* coordinates
+      const zoom = parseInt($('crop-zoom-slider').value) / 100;
+      const effectiveScale = cropScale * zoom;
+
+      const srcX = Math.round(selX / effectiveScale);
+      const srcY = Math.round(selY / effectiveScale);
+      const srcSize = Math.round(selSize / effectiveScale);
+
+      // Draw the crop at full resolution
+      const out = document.createElement('canvas');
+      out.width = srcSize;
+      out.height = srcSize;
+      const ctx = out.getContext('2d');
+      ctx.drawImage(cropImg, srcX, srcY, srcSize, srcSize, 0, 0, srcSize, srcSize);
+
+      const dataUrl = out.toDataURL('image/png');
+      const imgEl = cropTargetType === 'profile' ? $('img-profile') : $('img-frame');
+      imgEl.src = dataUrl;
+      imgEl.style.display = 'block';
+      $('placeholder').style.display = 'none';
+
+      $('crop-overlay').classList.remove('active');
+      cropTarget = null;
+      cropImg = null;
+
+      setStatus('Image cropped & loaded!', 'success');
+      updateCard();
+    }
+
+    // Handle file uploads and set base64 source with 1:1 ratio auto-crop
     function handleUpload(input, type) {
       const file = input.files[0];
       if (!file) return;
@@ -580,10 +1032,11 @@
         const img = new Image();
         img.onload = () => {
           if (img.width !== img.height) {
-            setStatus('Error: Image must have a 1:1 aspect ratio (square).', 'error');
-            input.value = '';
+            // Open the crop modal for non-square images
+            openCropModal(e.target.result, input, type);
             return;
           }
+          // Already square – use directly
           const imgEl = type === 'profile' ? $('img-profile') : $('img-frame');
           imgEl.src = e.target.result;
           imgEl.style.display = 'block';
@@ -672,6 +1125,9 @@
 
     // Init
     updateCard();
+    setupCropDrag();
+    // Reposition selection on window resize
+    window.addEventListener('resize', () => { if ($('crop-overlay').classList.contains('active')) positionSelection(); });
     // No resize listener needed anymore since layout is natively responsive via CSS aspect-ratio!
   </script>
 </body>
