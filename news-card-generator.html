@@ -431,25 +431,31 @@
       box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
     }
 
-    #news-card::before,
+
+    #news-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 36px 40px 0 0;
+      border-color: #b5000b transparent transparent transparent;
+      z-index: 4;
+    }
+
     #news-card::after {
       content: "";
       position: absolute;
       top: 0;
-      width: 40px;
-      height: 36px;
-      background: linear-gradient(135deg, #b5000b, #d31a22);
-      z-index: 4;
-    }
-
-    #news-card::before {
-      left: 0;
-      clip-path: polygon(0 0, 100% 0, 0 100%);
-    }
-
-    #news-card::after {
       right: 0;
-      clip-path: polygon(0 0, 100% 0, 100% 100%);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 40px 36px 0;
+      border-color: transparent #b5000b transparent transparent;
+      z-index: 4;
     }
 
     .card-topbar {
