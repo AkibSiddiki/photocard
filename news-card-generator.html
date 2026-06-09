@@ -438,25 +438,44 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 14px;
+      padding-left: 20px; /* shift right to make room for left accent */
       flex-shrink: 0;
       z-index: 2;
+      position: relative;
+    }
+
+    .card-topbar-accent {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 8px;
+      background: #c10f15;
+    }
+
+    .card-topbar-divider {
+      height: 6px;
+      background: #c10f15;
+      width: 100%;
+      z-index: 2;
+      flex-shrink: 0;
     }
 
     .card-topbar-left {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 7px;
+      justify-content: space-between;
       flex: 1;
       min-width: 0;
     }
 
     .card-favicon {
-      height: 24px;
-      width: 167px;
-      border-radius: 4px;
+      height: 28px;
+      width: auto;
+      max-width: 180px;
       flex-shrink: 0;
       display: block;
+      object-fit: contain;
     }
 
     .card-favicon.hidden {
@@ -477,26 +496,21 @@
     }
 
     .card-sep {
-      width: 1px;
-      height: 18px;
-      background: rgba(0, 0, 0, 0.15);
-      flex-shrink: 0;
-      margin: 0 2px;
+      display: none;
     }
 
     .card-date {
+      font-family: 'Noto Sans Bengali', sans-serif;
       font-size: 14px;
-      opacity: 0.9;
+      font-weight: 700;
+      color: #000000;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .card-topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-shrink: 0;
+      display: none;
     }
 
     .card-site-icon {
@@ -548,6 +562,7 @@
       flex-direction: column;
       gap: 12px;
       flex: 1;
+      background: linear-gradient(180deg, #990d12 0%, #cc1118 100%);
     }
 
     .card-headline {
@@ -557,6 +572,8 @@
       text-align: center;
       word-break: break-word;
       letter-spacing: -0.01em;
+      color: #ffffff;
+      font-family: 'Noto Serif Bengali', serif;
     }
 
     .card-subtext {
@@ -572,15 +589,23 @@
       justify-content: center;
       gap: 5px;
       margin-top: 4px;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-weight: 700;
+      color: #ffffff;
     }
 
-    .card-footer-arrow {
-      font-size: 13px;
+    .card-footer-brackets-left,
+    .card-footer-brackets-right {
+      font-size: 14px;
+      font-weight: bold;
+      opacity: 0.8;
+      user-select: none;
     }
 
     .card-footer-text {
       font-size: 12px;
-      opacity: 0.55;
+      opacity: 0.9;
+      font-weight: 700;
     }
 
     /* ─── Download panel ─── */
@@ -659,7 +684,7 @@
 
             <div class="field">
               <label>Date</label>
-              <input type="text" id="f-date" placeholder="e.g. সোমবার, ২৫ মে ২০২৬" oninput="updateCard()" />
+              <input type="text" id="f-date" placeholder="e.g. ০২ জুন ২০২৬" oninput="updateCard()" />
             </div>
 
 
@@ -676,8 +701,8 @@
 
             <div class="field">
               <label>Sub / Footer text</label>
-              <input type="text" id="f-sub" placeholder="e.g. বিস্তারিত কমেন্টে" oninput="updateCard()"
-                value="বিস্তারিত কমেন্টে" />
+              <input type="text" id="f-sub" placeholder="e.g. নিউজ লিঙ্ক কমেন্টে" oninput="updateCard()"
+                value="নিউজ লিঙ্ক কমেন্টে" />
             </div>
           </div>
 
@@ -706,25 +731,24 @@
               <div class="color-item">
                 <label>Background</label>
                 <div class="color-row">
-                  <input type="color" id="c-topbar-bg" value="#fff" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-topbar-bg-hex">#fff</span>
+                  <input type="color" id="c-topbar-bg" value="#ffffff" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-topbar-bg-hex">#ffffff</span>
                 </div>
               </div>
               <div class="color-item">
-                <label>Source name</label>
+                <label>Accent Line</label>
                 <div class="color-row">
-                  <input type="color" id="c-source" value="#ff6a00" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-source-hex">#ff6a00</span>
+                  <input type="color" id="c-topbar-accent" value="#c10f15" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-topbar-accent-hex">#c10f15</span>
                 </div>
               </div>
               <div class="color-item">
-                <label>Date / text</label>
+                <label>Date text</label>
                 <div class="color-row">
-                  <input type="color" id="c-topbar-text" value="#212121" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-topbar-text-hex">#212121</span>
+                  <input type="color" id="c-topbar-text" value="#000000" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-topbar-text-hex">#000000</span>
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -732,31 +756,31 @@
             <div class="section-title">Bottom Section Colors</div>
             <div class="color-field">
               <div class="color-item">
-                <label>Background</label>
+                <label>Gradient Start</label>
                 <div class="color-row">
-                  <input type="color" id="c-bottom-bg" value="#fff" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-bottom-bg-hex">#fff</span>
+                  <input type="color" id="c-bottom-grad-start" value="#990d12" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-bottom-grad-start-hex">#990d12</span>
+                </div>
+              </div>
+              <div class="color-item">
+                <label>Gradient End</label>
+                <div class="color-row">
+                  <input type="color" id="c-bottom-grad-end" value="#cc1118" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-bottom-grad-end-hex">#cc1118</span>
                 </div>
               </div>
               <div class="color-item">
                 <label>Headline text</label>
                 <div class="color-row">
-                  <input type="color" id="c-headline" value="#212121" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-headline-hex">#212121</span>
+                  <input type="color" id="c-headline" value="#ffffff" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-headline-hex">#ffffff</span>
                 </div>
               </div>
               <div class="color-item">
-                <label>Footer arrow</label>
+                <label>Footer text & Brackets</label>
                 <div class="color-row">
-                  <input type="color" id="c-arrow" value="#22c55e" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-arrow-hex">#22c55e</span>
-                </div>
-              </div>
-              <div class="color-item">
-                <label>Footer text</label>
-                <div class="color-row">
-                  <input type="color" id="c-footer-text" value="#383838" oninput="syncColor(this); updateCard()" />
-                  <span class="color-hex" id="c-footer-text-hex">#383838</span>
+                  <input type="color" id="c-footer-text" value="#ffffff" oninput="syncColor(this); updateCard()" />
+                  <span class="color-hex" id="c-footer-text-hex">#ffffff</span>
                 </div>
               </div>
             </div>
@@ -826,6 +850,7 @@
 
           <!-- Top bar -->
           <div class="card-topbar" id="card-topbar">
+            <div class="card-topbar-accent" id="card-topbar-accent"></div>
             <div class="card-topbar-left">
               <img class="card-favicon hidden" id="card-favicon" alt="" crossorigin="anonymous" />
               <span class="card-source" id="card-source">News Card</span>
@@ -836,9 +861,10 @@
                 </svg>
               </div>
               <div class="card-sep"></div>
-              <span class="card-date" id="card-date">সোমবার, ২৫ মে ২০২৬</span>
+              <span class="card-date" id="card-date">০২ জুন ২০২৬</span>
             </div>
           </div>
+          <div class="card-topbar-divider" id="card-topbar-divider"></div>
 
           <!-- Image -->
           <div class="card-image-wrap" id="card-image-wrap" style="position: relative; overflow: hidden;">
@@ -850,11 +876,11 @@
 
           <!-- Bottom -->
           <div class="card-bottom" id="card-bottom">
-            <div class="card-headline" id="card-headline">জঙ্গল সলিমপুরে র‍্যাব ক্যাম্পে হামলা, চলছে যৌথবাহিনীর অভিযান
-            </div>
-            <div class="card-footer">
-              <span class="card-footer-arrow" id="card-footer-arrow" style="color:#22c55e">▼</span>
-              <span class="card-footer-text" id="card-footer-text">বিস্তারিত কমেন্টে</span>
+            <div class="card-headline" id="card-headline">সাংবাদিক সাব্বিরের মায়ের ৫ম মৃত্যুবার্ষিকী আজ</div>
+            <div class="card-footer" id="card-footer">
+              <span class="card-footer-brackets-left" id="card-footer-brackets-left">&lt;&lt;&lt;</span>
+              <span class="card-footer-text" id="card-footer-text">নিউজ লিঙ্ক কমেন্টে</span>
+              <span class="card-footer-brackets-right" id="card-footer-brackets-right">&gt;&gt;&gt;</span>
             </div>
           </div>
 
@@ -928,15 +954,17 @@
 
       const src = $('card-source');
       src.textContent = val('f-source') || 'Source';
-      src.style.color = hex('c-source');
       src.style.fontSize = fsSource + 'px';
+
+      // Accent color updates (Left vertical line and separator below topbar)
+      const accentColor = hex('c-topbar-accent');
+      $('card-topbar-accent').style.backgroundColor = accentColor;
+      $('card-topbar-divider').style.backgroundColor = accentColor;
 
       const dateEl = $('card-date');
       dateEl.textContent = val('f-date') || '';
       dateEl.style.fontSize = fsDate + 'px';
-
-
-
+      dateEl.style.color = hex('c-topbar-text');
 
       // logo / favicon — shown as brand image, text source hidden
       const logoUrl = val('f-logo');
@@ -974,7 +1002,9 @@
 
       // ── Bottom ──
       const bottom = $('card-bottom');
-      bottom.style.background = hex('c-bottom-bg');
+      const gradStart = hex('c-bottom-grad-start');
+      const gradEnd = hex('c-bottom-grad-end');
+      bottom.style.background = `linear-gradient(180deg, ${gradStart} 0%, ${gradEnd} 100%)`;
       bottom.style.padding = `${pad}px ${pad}px ${Math.round(pad * 0.8)}px`;
 
       const hl = $('card-headline');
@@ -982,25 +1012,38 @@
       hl.style.color = hex('c-headline');
       hl.style.fontSize = fsHeadline + 'px';
 
-      const arrowEl = $('card-footer-arrow');
       const footerText = $('card-footer-text');
-      const subVal = val('f-sub');
-
-      arrowEl.style.color = hex('c-arrow');
-      footerText.textContent = subVal || 'বিস্তারিত কমেন্টে';
+      const subVal = val('f-sub') || 'নিউজ লিঙ্ক কমেন্টে';
+      footerText.textContent = subVal;
       footerText.style.color = hex('c-footer-text');
       footerText.style.fontSize = fsFooter + 'px';
+
+      const bracketsColor = hex('c-footer-text');
+      const bracketsLeft = $('card-footer-brackets-left');
+      const bracketsRight = $('card-footer-brackets-right');
+      if (bracketsLeft && bracketsRight) {
+        bracketsLeft.style.color = bracketsColor;
+        bracketsLeft.style.fontSize = (fsFooter + 2) + 'px';
+        bracketsRight.style.color = bracketsColor;
+        bracketsRight.style.fontSize = (fsFooter + 2) + 'px';
+      }
     }
 
     // ─── Fetch image as base64 data URL ─────────────────────────
     // Tries direct fetch first (works when hosted on the same server);
     // falls back to CORS proxies when running cross-origin.
     function isSameOrigin(url) {
-      try { return new URL(url).origin === location.origin; } catch { return false; }
+      try {
+        if (!/^https?:\/\//i.test(url)) return true; // Relative URLs are same-origin
+        return new URL(url).origin === location.origin;
+      } catch {
+        return false;
+      }
     }
 
     async function fetchAsBlob(url) {
-      const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
+      const fetchUrl = !/^https?:\/\//i.test(url) ? new URL(url, location.href).href : url;
+      const r = await fetch(fetchUrl, { signal: AbortSignal.timeout(12000) });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.blob();
     }
@@ -1015,7 +1058,7 @@
     }
 
     async function fetchImageAsDataUrl(imgUrl) {
-      // Same-origin: direct fetch, no proxy needed
+      // Same-origin or relative: direct fetch, no proxy needed
       if (isSameOrigin(imgUrl)) {
         return blobToDataUrl(await fetchAsBlob(imgUrl));
       }
@@ -1145,7 +1188,7 @@
             const d = new Date(pubDate);
             if (!isNaN(d)) {
               dateStr = d.toLocaleDateString('bn-BD', {
-                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                day: 'numeric', month: 'long', year: 'numeric'
               });
             }
           } catch (e) { dateStr = pubDate.substring(0, 10); }
@@ -1241,25 +1284,30 @@
       const image = p.get('image') || '';
       const date = p.get('date') || '';
       const source = p.get('source') || '';
-      const logo = 'https://www.narayanganjtimes.com/media/common/logo.png';
+      const logo = p.get('logo') || 'https://www.narayanganjtimes.com/media/common/logo.png';
 
-      // Populate text fields immediately
-      if (headline) $('f-headline').value = headline;
-      if (date) $('f-date').value = date;
-      if (source) $('f-source').value = source;
+      // Populate text fields immediately with query values or fallback design defaults
+      $('f-headline').value = headline || 'সাংবাদিক সাব্বিরের মায়ের ৫ম মৃত্যুবার্ষিকী আজ';
+      $('f-date').value = date || '০২ জুন ২০২৬';
+      $('f-source').value = source || 'নারায়ণগঞ্জ টাইমস';
+      $('f-logo').value = logo;
+      
+      const defaultImage = 'news_placeholder.png';
+      $('f-image').value = image || defaultImage;
 
       updateCard();
 
-      // Fetch image + logo as base64 (parallel) if URLs provided
-      if (image || logo) {
+      // Fetch image + logo as base64 (parallel) if URLs/paths provided
+      const targetImage = image || defaultImage;
+      if (targetImage || logo) {
         setStatus('ছবি লোড হচ্ছে…', 'loading');
         const jobs = [];
 
-        if (image) {
+        if (targetImage) {
           jobs.push(
-            fetchImageAsDataUrl(image)
+            fetchImageAsDataUrl(targetImage)
               .then(d => { $('f-image').value = d; })
-              .catch(() => { $('f-image').value = image; })
+              .catch(() => { $('f-image').value = targetImage; })
           );
         }
         if (logo) {
@@ -1270,9 +1318,21 @@
           );
         }
 
+        const hasParams = p.has('headline') || p.has('image') || p.has('date') || p.has('source');
         Promise.allSettled(jobs).then(() => {
           updateCard();
-          setStatus('✓ Article data loaded! Edit freely then download.', 'success');
+          if (hasParams) {
+            setStatus('✓ Article data loaded. Auto-downloading HD Card…', 'loading');
+            setTimeout(async () => {
+              try {
+                await downloadCard('png', 3);
+              } catch (err) {
+                setStatus('Auto-download failed. Please click "Download 3× (HD)" manually.', 'error');
+              }
+            }, 800);
+          } else {
+            setStatus('✓ Article data loaded! Edit freely then download.', 'success');
+          }
         });
       }
     })();
