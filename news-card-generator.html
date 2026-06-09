@@ -10,7 +10,9 @@
   <!--Google Fonts-->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;700;900&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;700;900&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet" />
   <style>
     *,
     *::before,
@@ -635,52 +637,6 @@
       position: relative;
     }
 
-    .memorial-panel {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-columns: 38% 1fr;
-      align-items: center;
-      padding: 12% 7% 10%;
-      gap: 6%;
-      background: #000000;
-    }
-
-    .memorial-ribbon {
-      width: 58%;
-      aspect-ratio: 1 / 1.42;
-      justify-self: center;
-      position: relative;
-      filter: drop-shadow(0 0 9px rgba(255, 255, 255, 0.78)) drop-shadow(0 0 18px rgba(255, 255, 255, 0.36));
-    }
-
-    .memorial-ribbon::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: transparent;
-      clip-path: polygon(13% 0, 87% 0, 87% 100%, 50% 68%, 13% 100%);
-      box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.92);
-    }
-
-    .memorial-ribbon::after {
-      content: "";
-      position: absolute;
-      inset: 9px;
-      clip-path: polygon(13% 0, 87% 0, 87% 100%, 50% 68%, 13% 100%);
-      box-shadow: inset 0 0 14px 4px rgba(255, 255, 255, 0.5);
-    }
-
-    .memorial-word {
-      color: #ffffff;
-      font-size: 38px;
-      font-weight: 900;
-      line-height: 1;
-      text-align: center;
-      text-shadow: 0 1px 0 #ffffff;
-      white-space: nowrap;
-    }
-
     .card-bottom {
       padding: 26px 28px 16px;
       display: flex;
@@ -900,7 +856,8 @@
 
             <div class="field">
               <label>Sub / Footer text</label>
-              <input type="text" id="f-sub" placeholder="e.g. নিউজ লিঙ্ক কমেন্টে" oninput="updateCard()" value="নিউজ লিঙ্ক কমেন্টে" />
+              <input type="text" id="f-sub" placeholder="e.g. নিউজ লিঙ্ক কমেন্টে" oninput="updateCard()"
+                value="নিউজ লিঙ্ক কমেন্টে" />
             </div>
           </div>
 
@@ -956,7 +913,8 @@
               <div class="color-item">
                 <label>Gradient Start</label>
                 <div class="color-row">
-                  <input type="color" id="c-bottom-grad-start" value="#990d12" oninput="syncColor(this); updateCard()" />
+                  <input type="color" id="c-bottom-grad-start" value="#990d12"
+                    oninput="syncColor(this); updateCard()" />
                   <span class="color-hex" id="c-bottom-grad-start-hex">#990d12</span>
                 </div>
               </div>
@@ -1062,11 +1020,12 @@
               <span class="card-source" id="card-source">News Card</span>
               <div class="card-verified" id="card-verified">
                 <svg viewBox="0 0 10 8" fill="none">
-                  <path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
                 </svg>
               </div>
               <div class="card-sep"></div>
-              <span class="card-date" id="card-date">০২ জুন ২০২৬</span>
+              <span class="card-date" id="card-date"></span>
             </div>
           </div>
           <div class="card-topbar-divider" id="card-topbar-divider"></div>
@@ -1074,24 +1033,19 @@
           <!-- Image -->
           <div class="card-image-wrap" id="card-image-wrap" style="position: relative; overflow: hidden;">
             <div class="card-img-placeholder" id="card-placeholder" style="height: 300px;">
-              <div class="memorial-panel" aria-hidden="true">
-                <div class="memorial-ribbon"></div>
-                <div class="memorial-word">মৃত্যুবার্ষিকী</div>
-              </div>
             </div>
             <img id="card-img" class="card-img-element" src="" alt="" style="display:none;" crossorigin="anonymous" />
           </div>
 
           <!-- Bottom -->
           <div class="card-bottom" id="card-bottom">
-            <div class="card-headline" id="card-headline">সাংবাদিক সাব্বিরের মায়ের ৫ম মৃত্যুবার্ষিকী আজ</div>
+            <div class="card-headline" id="card-headline"></div>
             <div class="card-footer" id="card-footer">
               <span class="card-footer-brackets-left" id="card-footer-brackets-left">&lt;&lt;&lt;</span>
               <span class="card-footer-text" id="card-footer-text">নিউজ লিঙ্ক কমেন্টে</span>
               <span class="card-footer-brackets-right" id="card-footer-brackets-right">&gt;&gt;&gt;</span>
             </div>
           </div>
-
         </div><!-- /news-card -->
       </div><!-- /preview-shell -->
 
@@ -1099,7 +1053,11 @@
         <button class="btn" onclick="downloadCard('png')">⬇ Download PNG</button>
         <button class="btn btn-primary" onclick="downloadCard('png', 3)">⬇ Download 3× (HD)</button>
       </div>
-
+      <footer
+        style="text-align:center; padding: 10px; font-size: 11px; color: var(--text-dim); border-top: 1px solid var(--border);">
+        Developed by <a href="https://eMythMakers.com" target="_blank"
+          style="color: var(--accent); text-decoration: none; font-weight: 600;">eMythMakers.com</a>
+      </footer>
     </div><!-- /right-panel -->
 
   </div><!-- /app-body -->
@@ -1499,8 +1457,8 @@
       const logo = p.get('logo') || 'https://www.narayanganjtimes.com/media/common/logo.png';
 
       // Populate text fields immediately with query values or fallback design defaults
-      $('f-headline').value = headline || 'সাংবাদিক সাব্বিরের মায়ের ৫ম মৃত্যুবার্ষিকী আজ';
-      $('f-date').value = date || '০২ জুন ২০২৬';
+      $('f-headline').value = headline || '';
+      $('f-date').value = date || '';
       $('f-source').value = source || 'নারায়ণগঞ্জ টাইমস';
       $('f-logo').value = logo;
 
